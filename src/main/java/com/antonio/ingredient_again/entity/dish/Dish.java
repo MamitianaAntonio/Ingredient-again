@@ -1,6 +1,9 @@
 package com.antonio.ingredient_again.entity.dish;
 
+import com.antonio.ingredient_again.entity.ingredient.Ingredient;
+
 import java.util.ArrayList;
+import java.util.List;
 
 public class Dish {
     private Integer id;
