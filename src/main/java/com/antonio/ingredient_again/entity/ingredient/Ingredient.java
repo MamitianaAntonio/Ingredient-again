@@ -22,6 +22,10 @@ public class Ingredient {
         this.requiredQuantity = requiredQuantity;
     }
 
+    public Ingredient () {
+        // default constructor
+    }
+
     // getter and setter
     public Integer getId() {
         return id;
