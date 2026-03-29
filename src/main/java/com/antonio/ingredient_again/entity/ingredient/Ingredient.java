@@ -1,6 +1,9 @@
 package com.antonio.ingredient_again.entity.ingredient;
 
 import com.antonio.ingredient_again.entity.dish.Dish;
+import com.antonio.ingredient_again.entity.stock.StockMovement;
+
+import java.util.List;
 
 public class Ingredient {
     private Integer id;
@@ -10,9 +13,10 @@ public class Ingredient {
     private Dish dish;
     private UnitEnum unit;
     private Double requiredQuantity;
+    private List<StockMovement> stockMovementList;
 
     // constructor
-    public Ingredient(Integer id, String name, Double price, CategoryEnum category, Dish dish, UnitEnum unit, Double requiredQuantity) {
+    public Ingredient(Integer id, String name, Double price, CategoryEnum category, Dish dish, UnitEnum unit, Double requiredQuantity, List<StockMovement> stockMovementList) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -20,6 +24,7 @@ public class Ingredient {
         this.dish = dish;
         this.unit = unit;
         this.requiredQuantity = requiredQuantity;
+        this.stockMovementList = stockMovementList;
     }
 
     public Ingredient () {
@@ -77,6 +82,14 @@ public class Ingredient {
 
     public Double getRequiredQuantity() {
         return requiredQuantity;
+    }
+
+    public List<StockMovement> getStockMovementList() {
+        return stockMovementList;
+    }
+
+    public void setStockMovementList(List<StockMovement> stockMovementList) {
+        this.stockMovementList = stockMovementList;
     }
 
     public void setRequiredQuantity(Double requiredQuantity) {
