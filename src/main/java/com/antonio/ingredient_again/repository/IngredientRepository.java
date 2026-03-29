@@ -41,4 +41,28 @@ public class IngredientRepository {
         }
         return ingredients;
     }
+
+    // find ingredient by id
+    public Ingredient findIngredientById (Integer id) {
+        String sql = "SELECT id, name, price, category FROM Ingredient WHERE id = ?";
+
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement st = conn.prepareStatement(sql)) {
+            st.setInt(1, id);
+            ResultSet rs = st.executeQuery();
+
+            if (rs.next()) {
+                Ingredient i = new Ingredient();
+                i.setId(rs.getInt("id"));
+                i.setName(rs.getString("name"));
+                i.setPrice(rs.getDouble("price"));
+                i.setCategory(CategoryEnum.valueOf(rs.getString("category").toUpperCase()));
+                return i;
+            }
+
+            return null;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
