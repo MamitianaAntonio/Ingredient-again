@@ -6,13 +6,17 @@ public class StockMovement {
     private Integer id;
     private StockValue value;
     private MovementTypeEnum type;
-    private Instant creationDataTime;
+    private Instant creationDatetime;
 
-    public StockMovement(Integer id, StockValue value, MovementTypeEnum type, Instant creationDataTime) {
+    public StockMovement(Integer id, StockValue value, MovementTypeEnum type, Instant creationDatetime) {
         this.id = id;
         this.value = value;
         this.type = type;
-        this.creationDataTime = creationDataTime;
+        this.creationDatetime = creationDatetime;
+    }
+
+    public StockMovement() {
+        // void constructor
     }
 
     public Integer getId() {
@@ -39,12 +43,12 @@ public class StockMovement {
         this.type = type;
     }
 
-    public Instant getCreationDataTime() {
-        return creationDataTime;
+    public Instant getCreationDatetime() {
+        return creationDatetime;
     }
 
-    public void setCreationDataTime(Instant creationDataTime) {
-        this.creationDataTime = creationDataTime;
+    public void setCreationDataTime(Instant creationDatetime) {
+        this.creationDatetime = creationDatetime;
     }
 
     @Override
@@ -53,7 +57,7 @@ public class StockMovement {
                 "id=" + id +
                 ", value=" + value +
                 ", type=" + type +
-                ", creationDataTime=" + creationDataTime +
+                ", creationDataTime=" + creationDatetime +
                 '}';
     }
 }
