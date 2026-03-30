@@ -2,6 +2,10 @@ package com.antonio.ingredient_again.repository;
 
 import com.antonio.ingredient_again.entity.ingredient.CategoryEnum;
 import com.antonio.ingredient_again.entity.ingredient.Ingredient;
+import com.antonio.ingredient_again.entity.ingredient.UnitEnum;
+import com.antonio.ingredient_again.entity.stock.MovementTypeEnum;
+import com.antonio.ingredient_again.entity.stock.StockMovement;
+import com.antonio.ingredient_again.entity.stock.StockValue;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
@@ -61,6 +65,46 @@ public class IngredientRepository {
             }
 
             return null;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    // find ingredient by id filtered with time and unit
+    public Ingredient findIngredientByIdWithMovements (Integer id) {
+        String sqlIngredient = "select id from ingredient where id = ?";
+        String sqlMovements = "select id, quantity, unit, type, creation_datetime from stockmovement where id_ingredient = ?";
+
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement stIngredient = conn.prepareStatement(sqlIngredient);
+             PreparedStatement stMovement = conn.prepareStatement(sqlMovements)) {
+
+            // verify if the ingredient exist
+            stIngredient.setInt(1, id);
+            ResultSet rsIngredient = stIngredient.executeQuery();
+            if (!rsIngredient.next()) return null;
+            // collect movements
+            stMovement.setInt(1, id);
+            ResultSet rsMovements = stMovement.executeQuery();
+
+            List<StockMovement> movements = new ArrayList<>();
+            while (rsMovements.next()) {
+                StockValue value = new StockValue();
+                value.setQuantity(rsMovements.getDouble("quantity"));
+                value.setUnit(UnitEnum.valueOf(rsMovements.getString("unit").toUpperCase()));
+
+                StockMovement movement = new StockMovement();
+                movement.setId(rsMovements.getInt("id"));
+                movement.setValue(value);
+                movement.setType(MovementTypeEnum.valueOf(rsMovements.getString("type").toUpperCase()));
+                movement.setCreationDataTime(rsMovements.getTimestamp("creation_datetime").toInstant());
+                movements.add(movement);
+            }
+
+            Ingredient ingredient = new Ingredient();
+            ingredient.setId(id);
+            ingredient.setStockMovementList(movements);
+            return ingredient;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
