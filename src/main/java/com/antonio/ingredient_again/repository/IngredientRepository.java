@@ -109,4 +109,16 @@ public class IngredientRepository {
             throw new RuntimeException(e);
         }
     }
+
+    // verify if ingredient doesn't exist
+    public boolean existsById(Integer id) {
+        String sql = "SELECT id FROM ingredient WHERE id = ?";
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement st = conn.prepareStatement(sql)) {
+            st.setInt(1, id);
+            return st.executeQuery().next();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
