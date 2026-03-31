@@ -50,4 +50,16 @@ public class DishService {
                 .toList();
         return new DishResponse(dish.getId(), dish.getName(), dish.getPrice(), ingredientResponses);
     }
+
+    // find dish ingredients
+    public List<IngredientResponse> getDishIngredients(Integer dishId, String ingredientName, Double priceAround) {
+        if (!dishRepository.existsById(dishId)) {
+            throw new DishNotFoundException(dishId);
+        }
+
+        return dishRepository.findIngredientsByDishId(dishId, ingredientName, priceAround)
+                .stream()
+                .map(i -> new IngredientResponse(i.getId(), i.getName(), i.getPrice(), i.getCategory()))
+                .toList();
+    }
 }
