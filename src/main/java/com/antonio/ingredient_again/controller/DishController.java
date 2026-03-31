@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -29,14 +30,27 @@ public class DishController {
             @PathVariable Integer id,
             @RequestBody(required = false) UpdateDishIngredientsRequest request
     ) {
-        if (request == null || request.getIngredientIds() == null) {
+        if (request == null || request.ingredientIds() == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("Request body with ingredientIds is required.");
         }
 
         try {
-            List<DishResponse> response = dishService.updateIngredients(id, request.getIngredientIds());
+            List<DishResponse> response = Collections.singletonList(dishService.updateIngredients(id, request.ingredientIds()));
             return ResponseEntity.ok(response);
+        } catch (DishNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/{id}/ingredients")
+    public ResponseEntity<?> getDishIngredients(
+            @PathVariable Integer id,
+            @RequestParam(required = false) String ingredientName,
+            @RequestParam(required = false) Double ingredientPriceAround
+    ) {
+        try {
+            return ResponseEntity.ok(dishService.getDishIngredients(id, ingredientName, ingredientPriceAround));
         } catch (DishNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
